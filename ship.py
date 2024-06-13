@@ -14,11 +14,14 @@ class Ship():
         self.screen_rect = screen.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom
         self.moving_right = False
+        self.moving_left = False
 
     def update(self):
         """Refreshes user's ship position according the flag"""
         if self.moving_right:
             self.rect.x += 1
+        if self.moving_left:
+            self.rect.x -= 1
 
     def blitme(self):
         """Displays the ship at its current position."""
