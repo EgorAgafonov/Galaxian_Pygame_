@@ -55,6 +55,8 @@ class AlienInvasion:
             self.ship.moving_up = False
         elif event.key == pygame.K_DOWN:
             self.ship.moving_down = False
+        elif event.key == pygame.K_q:
+            sys.exit()
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
