@@ -11,7 +11,7 @@ class Ship:
         self.ai_settings = ai_settings
         self.image = pygame.image.load('images/user_ship.png')
         self.rect = self.image.get_rect()
-        self.screen_rect = screen.get_rect()
+        self.screen_rect = self.screen.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom
         self.x = float(self.rect.x)
         self.moving_right = False
@@ -19,9 +19,9 @@ class Ship:
 
     def update(self):
         """Refreshes user's ship position according the flag"""
-        if self.moving_right:
+        if self.moving_right and self.rect.right < self.screen_rect.right:
             self.x += self.ai_settings.ship_speed
-        if self.moving_left:
+        if self.moving_left and self.rect.left > 0:
             self.x -= self.ai_settings.ship_speed
 
         self.rect.x = self.x
