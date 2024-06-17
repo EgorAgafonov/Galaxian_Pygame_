@@ -7,6 +7,7 @@ class Alien(Sprite):
 
     def __init__(self, ai_game):
         """Initialize user's main battle-ship and sets starting position."""
+        super().__init__()
 
         self.screen = ai_game.screen
         self.image = pygame.image.load('images/alien_ship.png')
