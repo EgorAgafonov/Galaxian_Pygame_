@@ -16,3 +16,14 @@ class Bullet(Sprite):
         self.rect.midtop = ai_game.ship.rect.midtop
 
         self.y = float(self.rect.y)
+
+    def update(self):
+        """Перемещает снаряд по экрану в верх."""
+        # обновление позиции снаряда в вещественном формате
+        self.y -= self.settings.bullet_speed
+        self.rect.y = self.y
+
+    def draw_bullet(self):
+        """Отображение снаряда на экране"""
+
+        pygame.draw.rect(self.screen, self.color, self.rect)
