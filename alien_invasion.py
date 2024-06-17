@@ -81,7 +81,6 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-        print(len(self.bullets))
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""

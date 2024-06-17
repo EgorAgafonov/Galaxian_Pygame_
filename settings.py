@@ -13,5 +13,5 @@ class Settings:
         self.bullet_width = 3
         self.bullet_height = 20
         self.bullet_color = (255, 255, 255)
-        self.bullets_limit = 3
+        self.bullets_limit = 4
 
