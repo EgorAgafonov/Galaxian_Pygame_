@@ -120,6 +120,7 @@ class AlienInvasion:
         """Обновляет изображения на экране и отображает новый экран"""
 
         self.screen.fill(self.settings.bg_color)
+        self.screen.blit(self.settings.bckgrnd_screen, (0, 0))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
