@@ -4,6 +4,7 @@ from settings import Settings
 from ship import Ship
 from bullet import Bullet
 from allien import Alien
+from meteor import Meteor
 
 
 class AlienInvasion:
@@ -18,8 +19,9 @@ class AlienInvasion:
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
-
-        self.create_fleet()
+        self.meteors = pygame.sprite.Group()
+        self._create_fleet()
+        self._create_meteors()
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -86,7 +88,7 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
-    def create_fleet(self):
+    def _create_fleet(self):
         """Создание флота пришельцев"""
 
         # создание корабля пришельца и вычисление количества пришельцев в ряду
@@ -115,6 +117,10 @@ class AlienInvasion:
         alien.rect.x = alien.x
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
+
+    def _create_meteors(self):
+        """"""
+
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
