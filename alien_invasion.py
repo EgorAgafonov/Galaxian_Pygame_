@@ -20,8 +20,8 @@ class AlienInvasion:
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self.meteors = pygame.sprite.Group()
-        self._create_fleet()
-        self._create_meteors()
+        self._create_aliens_fleet()
+        self._create_meteorite_belt()
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -88,7 +88,7 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
-    def _create_fleet(self):
+    def _create_aliens_fleet(self):
         """Создание флота пришельцев"""
 
         # создание корабля пришельца и вычисление количества пришельцев в ряду
@@ -118,9 +118,33 @@ class AlienInvasion:
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
-    def _create_meteors(self):
+    def _create_meteor(self, meteor_number, row_number):
         """"""
 
+        meteor = Meteor(self)
+        meteor_width, meteor_height = meteor.rect.size
+        meteor.x = meteor_width + 2 * meteor_width * meteor_number
+        meteor.rect.x = meteor.x
+        meteor.rect.y = meteor.rect.height + 2 * meteor.rect.height * row_number
+        self.aliens.add(meteor)
+
+    def _create_meteorite_belt(self):
+        """"""
+
+        meteor = Meteor(self)
+        meteor_width, meteor_height = meteor.rect.size
+        available_space_x = self.settings.screen_width - (2 * meteor_width)
+        number_meteor_x = available_space_x // (2 * meteor_width)
+
+        # определим количество рядов, помещающихся на экране
+        ship_height = self.ship.rect.height
+        available_space_y = (self.settings.screen_height - (3 * meteor_height) - ship_height)
+        number_rows = available_space_y // (2 * meteor_height)
+
+        # создание флота кораблей пришельцев
+        for row_number in range(number_rows):
+            for meteor_number in range(number_meteor_x):
+                self._create_meteor(meteor_number, row_number)
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
@@ -131,6 +155,7 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
+        self.meteors.draw(self.screen)
 
         pygame.display.flip()
 
