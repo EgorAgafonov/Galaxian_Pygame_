@@ -17,12 +17,12 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
+        self.meteors = pygame.sprite.Group()
+        self._create_meteorite_belt()
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_aliens_fleet()
-        self.meteors = pygame.sprite.Group()
-        self._create_meteorite_belt()
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -128,7 +128,7 @@ class AlienInvasion:
         meteor.x = meteor_width + randint(-10, 10) * meteor_width * meteor_number
         meteor.rect.x = meteor.x
         meteor.rect.y = meteor.rect.height + randint(-10, 10) * meteor.rect.height * row_number
-        self.aliens.add(meteor)
+        self.meteors.add(meteor)
 
     def _create_meteorite_belt(self):
         """"""
@@ -139,7 +139,7 @@ class AlienInvasion:
         number_meteor_x = available_space_x // (1 * meteor_width)
 
         # определим количество рядов, помещающихся на экране
-        ship_height = self.ship.rect.height
+        ship_height = meteor.rect.height
         available_space_y = (self.settings.screen_height - (1 * meteor_height) - ship_height)
         number_rows = available_space_y // (1 * meteor_height)
 
@@ -153,11 +153,11 @@ class AlienInvasion:
 
         self.screen.fill(self.settings.bg_color)
         self.screen.blit(self.settings.bckgrnd_screen, (0, 0))
+        self.meteors.draw(self.screen)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
-        self.meteors.draw(self.screen)
 
         pygame.display.flip()
 
