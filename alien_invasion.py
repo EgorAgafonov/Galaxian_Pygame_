@@ -2,6 +2,7 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
+from raindrop import RainDrops
 from bullet import Bullet
 from allien import Alien
 from meteor import Meteor
@@ -14,14 +15,16 @@ class AlienInvasion:
         pygame.init()
         pygame.display.set_caption("Alien Invasion")
         self.settings = Settings()
-        self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+        self.screen = pygame.display.set_mode((0, 0))
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         self.meteors = pygame.sprite.Group()
         self._create_meteorite_belt()
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
+        self.drops = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
+        self._create_rain_drops_rows()
         self._create_aliens_fleet()
 
     def run_game(self):
@@ -30,8 +33,10 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
+
             self._update_bullets()
             self._update_aliens()
+            self._update_rain_drop()
             self._update_screen()
 
     def _check_events(self):
@@ -90,6 +95,15 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+    def _update_rain_drop(self):
+        """Обновление позиции капли и удаление старых капель вне зоны видимости"""
+
+        self.drops.update()
+        # удаление снарядов, вышедших за край экрана.
+        for drop in self.drops.copy():
+            if drop.rect.bottom >= self.screen.get_rect().bottom:
+                self.drops.remove(drop)
+
     def _update_aliens(self):
         """Обновляет позиции всех пришельцев во флоте"""
 
@@ -141,8 +155,29 @@ class AlienInvasion:
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
+    def _create_drop(self, drop_number, row_number):
+        """Создание метеорита и размещение в ряду"""
 
+        drop = RainDrops(self)
+        drop_width, drop_height = drop.rect.size
 
+        drop.x = drop_width + randint(-10, 10) * drop_width * drop_number
+        drop.rect.y = drop.rect.height + randint(-10, 10) * drop.rect.height * row_number
+        self.drops.add(drop)
+
+    def _create_rain_drops_rows(self):
+        drop = RainDrops(self)
+        drop_width, drop_height = drop.rect.size
+        available_space_x = self.settings.screen_width - (2 * drop_width)
+        number_drop_x = available_space_x // (2 * drop_width)
+
+        drop_height = drop.rect.height
+        available_space_y = (self.settings.screen_height - (3 * drop_height) - drop_height)
+        number_rows = available_space_y // (2 * drop_height)
+
+        for row_number in range(number_rows):
+            for drop_number in range(number_drop_x):
+                self._create_drop(drop_number, row_number)
 
     def _create_meteor(self, meteor_number, row_number):
         """Создание метеорита и размещение в ряду"""
@@ -176,12 +211,14 @@ class AlienInvasion:
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
 
-        self.screen.fill(self.settings.bg_color)
+        self.screen.fill(self.settings.background_color)
         self.screen.blit(self.settings.background_image, (0, 0))
         self.meteors.draw(self.screen)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        for drop in self.drops.sprites():
+            drop.draw_rain_drop()
         self.aliens.draw(self.screen)
 
         pygame.display.flip()
