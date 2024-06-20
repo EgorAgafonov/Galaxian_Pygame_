@@ -5,6 +5,7 @@ from ship import Ship
 from bullet import Bullet
 from allien import Alien
 from meteor import Meteor
+from random import randint
 
 
 class AlienInvasion:
@@ -19,8 +20,8 @@ class AlienInvasion:
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
-        self.meteors = pygame.sprite.Group()
         self._create_aliens_fleet()
+        self.meteors = pygame.sprite.Group()
         self._create_meteorite_belt()
 
     def run_game(self):
@@ -123,9 +124,10 @@ class AlienInvasion:
 
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
-        meteor.x = meteor_width + 2 * meteor_width * meteor_number
+
+        meteor.x = meteor_width + randint(-10, 10) * meteor_width * meteor_number
         meteor.rect.x = meteor.x
-        meteor.rect.y = meteor.rect.height + 2 * meteor.rect.height * row_number
+        meteor.rect.y = meteor.rect.height + randint(-10, 10) * meteor.rect.height * row_number
         self.aliens.add(meteor)
 
     def _create_meteorite_belt(self):
@@ -133,13 +135,13 @@ class AlienInvasion:
 
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
-        available_space_x = self.settings.screen_width - (2 * meteor_width)
-        number_meteor_x = available_space_x // (2 * meteor_width)
+        available_space_x = self.settings.screen_width - (randint(-10, 10) * meteor_width)
+        number_meteor_x = available_space_x // (1 * meteor_width)
 
         # определим количество рядов, помещающихся на экране
         ship_height = self.ship.rect.height
-        available_space_y = (self.settings.screen_height - (3 * meteor_height) - ship_height)
-        number_rows = available_space_y // (2 * meteor_height)
+        available_space_y = (self.settings.screen_height - (1 * meteor_height) - ship_height)
+        number_rows = available_space_y // (1 * meteor_height)
 
         # создание флота кораблей пришельцев
         for row_number in range(number_rows):
