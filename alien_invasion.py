@@ -17,12 +17,12 @@ class AlienInvasion:
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
         pygame.display.set_caption("Alien Invasion")
-        self.meteors = pygame.sprite.Group()
-        self._create_meteorite_belt()
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
         self._create_aliens_fleet()
+        self.meteors = pygame.sprite.Group()
+        self._create_meteorite_belt()
 
     def run_game(self):
         """Запуск основного цикла игры"""
