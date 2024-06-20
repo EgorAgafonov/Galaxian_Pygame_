@@ -9,7 +9,7 @@ class Ship:
 
         self.screen = screen
         self.ai_settings = ai_settings
-        self.image = pygame.image.load('images/user_ship.png')
+        self.image = pygame.image.load('images/user_ship.png').convert_alpha()
         self.rect = self.image.get_rect()
         self.screen_rect = self.screen.get_rect()
         self.rect.midbottom = self.screen_rect.midbottom

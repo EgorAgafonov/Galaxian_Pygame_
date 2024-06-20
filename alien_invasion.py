@@ -12,11 +12,11 @@ class AlienInvasion:
     def __init__(self):
         """Инициализируем игру и создаем игровые ресурсы."""
         pygame.init()
+        pygame.display.set_caption("Alien Invasion")
         self.settings = Settings()
         self.screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
-        pygame.display.set_caption("Alien Invasion")
         self.meteors = pygame.sprite.Group()
         self._create_meteorite_belt()
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
@@ -31,6 +31,7 @@ class AlienInvasion:
             self._check_events()
             self.ship.update()
             self._update_bullets()
+            self._update_aliens()
             self._update_screen()
 
     def _check_events(self):
@@ -89,6 +90,12 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+    def _update_aliens(self):
+        """Обновляет позиции всех пришельцев во флоте"""
+
+        self._check_fleet_edges()
+        self.aliens.update()
+
     def _create_aliens_fleet(self):
         """Создание флота пришельцев"""
 
@@ -119,19 +126,37 @@ class AlienInvasion:
         alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
         self.aliens.add(alien)
 
+    def _check_fleet_edges(self):
+        """Реагирует на достижение пришельцем края экрана"""
+
+        for alien in self.aliens.sprites():
+            if alien.check_edges():
+                self._change_fleet_direction()
+                break
+
+    def _change_fleet_direction(self):
+        """Опускает весь флот и меняет направление флота"""
+
+        for alien in self.aliens.sprites():
+            alien.rect.y += self.settings.fleet_drop_speed
+        self.settings.fleet_direction *= -1
+
+
+
+
     def _create_meteor(self, meteor_number, row_number):
-        """"""
+        """Создание метеорита и размещение в ряду"""
 
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
 
         meteor.x = meteor_width + randint(-10, 10) * meteor_width * meteor_number
         meteor.rect.x = meteor.x
-        meteor.rect.y = meteor.rect.height + 2 * meteor.rect.height * row_number
+        meteor.rect.y = meteor.rect.height + randint(-10, 10) * meteor.rect.height * row_number
         self.meteors.add(meteor)
 
     def _create_meteorite_belt(self):
-        """"""
+        """Создание метеоритного пояса"""
 
         meteor = Meteor(self)
         meteor_width, meteor_height = meteor.rect.size
@@ -152,7 +177,7 @@ class AlienInvasion:
         """Обновляет изображения на экране и отображает новый экран"""
 
         self.screen.fill(self.settings.bg_color)
-        self.screen.blit(self.settings.bckgrnd_screen, (0, 0))
+        self.screen.blit(self.settings.background_image, (0, 0))
         self.meteors.draw(self.screen)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
