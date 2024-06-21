@@ -2,10 +2,9 @@ import sys
 import pygame
 from settings import Settings
 from ship import Ship
-from raindrop import RainDrops
 from bullet import Bullet
 from allien import Alien
-from meteor import Meteor
+from raindrop import RainDrop
 from random import randint
 
 
@@ -20,12 +19,11 @@ class AlienInvasion:
         self.settings.screen_height = self.screen.get_rect().height
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
-        self.meteors = pygame.sprite.Group()
-        self._create_meteorite_belt()
-        self.drops = pygame.sprite.Group()
-        self._create_rain_drops_rows()
         self.aliens = pygame.sprite.Group()
+        self.drops = pygame.sprite.Group()
+
         self._create_aliens_fleet()
+        self._create_rainfall()
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -35,7 +33,6 @@ class AlienInvasion:
             self.ship.update()
             self._update_bullets()
             self._update_aliens()
-            self._update_rain_drop()
             self._update_screen()
 
     def _check_events(self):
@@ -94,15 +91,6 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
-    def _update_rain_drop(self):
-        """Обновление позиции капли и удаление старых капель вне зоны видимости"""
-
-        self.drops.update()
-        # удаление снарядов, вышедших за край экрана.
-        for drop in self.drops.copy():
-            if drop.rect.bottom >= self.screen.get_rect().bottom:
-                self.drops.remove(drop)
-
     def _update_aliens(self):
         """Обновляет позиции всех пришельцев во флоте"""
 
@@ -154,73 +142,34 @@ class AlienInvasion:
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
-    def _create_drop(self, drop_number, row_number):
-        """Создание капли и размещение в ряду"""
+    def _create_rainfall(self):
+        """Создание стены дождевых капель"""
 
-        drop = RainDrops(self)
-        drop_width, drop_height = drop.rect.size
-
-        drop.x = drop_width + 2 * drop_width * drop_number
-        drop.rect.y = drop.rect.height + 2 * drop.rect.height * row_number
-        self.drops.add(drop)
-
-    def _create_rain_drops_rows(self):
-        drop = RainDrops(self)
-        drop_width, drop_height = drop.rect.size
+        # создание потока капель и вычисление количества дождевых потоков в ряду
+        # интервал между дождевыми потоками равен высоте одного дождевого потока
+        drop = RainDrop(self)
+        drop_width = drop.rect.height
         available_space_x = self.settings.screen_width - (2 * drop_width)
-        number_drop_x = available_space_x // (2 * drop_width)
+        number_drops_x = available_space_x // (2 * drop_width)
 
-        drop_height = drop.rect.height
-        available_space_y = (self.settings.screen_height - (3 * drop_height) - drop_height)
-        number_rows = available_space_y // (2 * drop_height)
-
-        for row_number in range(number_rows):
-            for drop_number in range(number_drop_x):
-                self._create_drop(drop_number, row_number)
-
-    def _create_meteor(self, meteor_number, row_number):
-        """Создание метеорита и размещение в ряду"""
-
-        meteor = Meteor(self)
-        meteor_width, meteor_height = meteor.rect.size
-
-        meteor.x = meteor_width + randint(-10, 10) * meteor_width * meteor_number
-        meteor.rect.x = meteor.x
-        meteor.rect.y = meteor.rect.height + randint(-10, 10) * meteor.rect.height * row_number
-        self.meteors.add(meteor)
-
-    def _create_meteorite_belt(self):
-        """Создание метеоритного пояса"""
-
-        meteor = Meteor(self)
-        meteor_width, meteor_height = meteor.rect.size
-        available_space_x = self.settings.screen_width - (2 * meteor_width)
-        number_meteor_x = available_space_x // (2 * meteor_width)
-
-        # определим количество рядов, помещающихся на экране
-        meteor_height = meteor.rect.height
-        available_space_y = (self.settings.screen_height - (3 * meteor_height) - meteor_height)
-        number_rows = available_space_y // (2 * meteor_height)
-
-        # создание флота кораблей пришельцев
-        for row_number in range(number_rows):
-            for meteor_number in range(number_meteor_x):
-                self._create_meteor(meteor_number, row_number)
+        # создание первого ряда дожд. потока
+        for drop_number in range(number_drops_x):
+            drop = RainDrop(self)
+            #  задаем координату для размещения дождевого потока на оси x
+            drop.x = randint(0, self.settings.screen_width)
+            drop.rect.x = drop.x
+            self.drops.add(drop)
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
 
         self.screen.fill(self.settings.background_color)
         # self.screen.blit(self.settings.background_image, (0, 0))
-        self.meteors.draw(self.screen)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
-        for drop in self.drops.sprites():
-            drop.draw_rain_drop()
-        for meteor in self.meteors.sprites():
-            meteor.update()
         self.aliens.draw(self.screen)
+        self.drops.draw(self.screen)
 
         pygame.display.flip()
 
