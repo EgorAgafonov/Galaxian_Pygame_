@@ -33,6 +33,7 @@ class AlienInvasion:
             self.ship.update()
             self._update_bullets()
             self._update_aliens()
+            self._update_rain_drops()
             self._update_screen()
 
     def _check_events(self):
@@ -90,6 +91,11 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
+
+    def _update_rain_drops(self):
+        """"""
+
+        self.drops.update()
 
     def _update_aliens(self):
         """Обновляет позиции всех пришельцев во флоте"""
@@ -154,11 +160,16 @@ class AlienInvasion:
 
         # создание первого ряда дожд. потока
         for drop_number in range(number_drops_x):
-            drop = RainDrop(self)
-            #  задаем координату для размещения дождевого потока на оси x
-            drop.x = randint(0, self.settings.screen_width)
-            drop.rect.x = drop.x
-            self.drops.add(drop)
+            self._create_drop(drop_number)
+
+    def _create_drop(self, drop_number):
+        """Создание одного дождевого потока, размещение его в ряду для последующего добавления в группу"""
+
+        drop = RainDrop(self)
+        #  задаем координату для размещения дождевого потока на оси x
+        drop.x = randint(0, self.settings.screen_width) * drop_number
+        drop.rect.x = drop.x
+        self.drops.add(drop)
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""

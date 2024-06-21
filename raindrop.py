@@ -18,3 +18,9 @@ class RainDrop(Sprite):
 
         self.y = float(self.rect.y)
 
+    def update(self):
+        """Перемещение дождевого потока вниз экрана"""
+
+        self.y += self.settings.drop_speed
+        self.rect.y = self.y
+
