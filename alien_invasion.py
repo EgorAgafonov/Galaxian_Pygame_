@@ -18,13 +18,13 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((0, 0))
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
-        self.meteors = pygame.sprite.Group()
-        self._create_meteorite_belt()
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
+        self.meteors = pygame.sprite.Group()
+        self._create_meteorite_belt()
         self.drops = pygame.sprite.Group()
-        self.aliens = pygame.sprite.Group()
         self._create_rain_drops_rows()
+        self.aliens = pygame.sprite.Group()
         self._create_aliens_fleet()
 
     def run_game(self):
@@ -33,7 +33,6 @@ class AlienInvasion:
         while True:
             self._check_events()
             self.ship.update()
-
             self._update_bullets()
             self._update_aliens()
             self._update_rain_drop()
@@ -156,13 +155,13 @@ class AlienInvasion:
         self.settings.fleet_direction *= -1
 
     def _create_drop(self, drop_number, row_number):
-        """Создание метеорита и размещение в ряду"""
+        """Создание капли и размещение в ряду"""
 
         drop = RainDrops(self)
         drop_width, drop_height = drop.rect.size
 
-        drop.x = drop_width + randint(-10, 10) * drop_width * drop_number
-        drop.rect.y = drop.rect.height + randint(-10, 10) * drop.rect.height * row_number
+        drop.x = drop_width + 2 * drop_width * drop_number
+        drop.rect.y = drop.rect.height + 2 * drop.rect.height * row_number
         self.drops.add(drop)
 
     def _create_rain_drops_rows(self):
@@ -212,13 +211,15 @@ class AlienInvasion:
         """Обновляет изображения на экране и отображает новый экран"""
 
         self.screen.fill(self.settings.background_color)
-        self.screen.blit(self.settings.background_image, (0, 0))
+        # self.screen.blit(self.settings.background_image, (0, 0))
         self.meteors.draw(self.screen)
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         for drop in self.drops.sprites():
             drop.draw_rain_drop()
+        for meteor in self.meteors.sprites():
+            meteor.update()
         self.aliens.draw(self.screen)
 
         pygame.display.flip()

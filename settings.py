@@ -12,7 +12,7 @@ class Settings:
         self.screen_width = self.background_image.get_width()
         self.screen_height = self.background_image.get_height()
 
-        self.meteors_speed = 3
+        self.meteor_speed = 3
         self.ship_speed = 3
         self.alien_speed = 2.0
 
@@ -28,6 +28,6 @@ class Settings:
 
         self.drop_color = (255, 0, 0)
         self.drop_width = 5
-        self.drop_height = 20
-        self.drop_speed = 20
+        self.drop_height = 60
+        self.drop_speed = 10
 
