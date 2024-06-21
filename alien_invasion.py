@@ -23,7 +23,7 @@ class AlienInvasion:
         self.drops = pygame.sprite.Group()
 
         self._create_aliens_fleet()
-        self._create_rainfall()
+        self._create_rain_drops()
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -93,15 +93,30 @@ class AlienInvasion:
                 self.bullets.remove(bullet)
 
     def _update_rain_drops(self):
-        """"""
+        """Обновляет позицию всех дождевых потоков"""
 
         self.drops.update()
+        for drop in self.drops.copy():
+            if drop.rect.bottom >= self.settings.screen_height:
+                self.drops.remove(drop)
+        if not self.drops:
+            self._create_rain_drops()
 
     def _update_aliens(self):
         """Обновляет позиции всех пришельцев во флоте"""
 
         self._check_fleet_edges()
         self.aliens.update()
+
+    def _create_alien(self, alien_number, row_number):
+        """Создание пришельца и размещение в ряду"""
+
+        alien = Alien(self)
+        alien_width, alien_height = alien.rect.size
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
+        self.aliens.add(alien)
 
     def _create_aliens_fleet(self):
         """Создание флота пришельцев"""
@@ -123,16 +138,6 @@ class AlienInvasion:
             for alien_number in range(number_alien_x):
                 self._create_alien(alien_number, row_number)
 
-    def _create_alien(self, alien_number, row_number):
-        """Создание пришельца и размещение в ряду"""
-
-        alien = Alien(self)
-        alien_width, alien_height = alien.rect.size
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
-        self.aliens.add(alien)
-
     def _check_fleet_edges(self):
         """Реагирует на достижение пришельцем края экрана"""
 
@@ -148,7 +153,17 @@ class AlienInvasion:
             alien.rect.y += self.settings.fleet_drop_speed
         self.settings.fleet_direction *= -1
 
-    def _create_rainfall(self):
+    def _create_drop(self, drop_number, row_number):
+        """Создание одного дождевого потока, размещение его в ряду для последующего добавления в группу"""
+
+        drop = RainDrop(self)
+        #  задаем координату для размещения дождевого потока на оси x
+        drop.x = randint(0, self.settings.screen_width) * drop_number
+        drop.rect.x = drop.x
+        drop.rect.y = drop.rect.height + 2 * drop.rect.height * row_number
+        self.drops.add(drop)
+
+    def _create_rain_drops(self):
         """Создание стены дождевых капель"""
 
         # создание потока капель и вычисление количества дождевых потоков в ряду
@@ -158,24 +173,21 @@ class AlienInvasion:
         available_space_x = self.settings.screen_width - (2 * drop_width)
         number_drops_x = available_space_x // (2 * drop_width)
 
-        # создание первого ряда дожд. потока
-        for drop_number in range(number_drops_x):
-            self._create_drop(drop_number)
+        # определим количество рядов, помещающихся на экране
+        drop_height = self.ship.rect.height
+        available_space_y = self.settings.screen_height - drop_height
+        number_rows = available_space_y // (2 * drop_height)
 
-    def _create_drop(self, drop_number):
-        """Создание одного дождевого потока, размещение его в ряду для последующего добавления в группу"""
-
-        drop = RainDrop(self)
-        #  задаем координату для размещения дождевого потока на оси x
-        drop.x = randint(0, self.settings.screen_width) * drop_number
-        drop.rect.x = drop.x
-        self.drops.add(drop)
+        # создание флота кораблей пришельцев
+        for row_number in range(number_rows):
+            for drop_number in range(number_drops_x):
+                self._create_drop(drop_number, row_number)
 
     def _update_screen(self):
         """Обновляет изображения на экране и отображает новый экран"""
 
         self.screen.fill(self.settings.background_color)
-        # self.screen.blit(self.settings.background_image, (0, 0))
+        self.screen.blit(self.settings.background_image, (0, 0))
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()

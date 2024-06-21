@@ -29,5 +29,5 @@ class Settings:
         self.drop_color = (255, 0, 0)
         self.drop_width = 5
         self.drop_height = 60
-        self.drop_speed = 3
+        self.drop_speed = 10
 
