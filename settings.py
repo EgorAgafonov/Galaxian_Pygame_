@@ -20,7 +20,7 @@ class Settings:
         # self.fleet_direction = 1 - движение пришельцев вправо по оси y, -1 - движение пришельцев влево
         self.fleet_direction = 1
 
-        self.bullet_width = 4
+        self.bullet_width = 400
         self.bullet_height = 20
         self.bullet_color = (255, 0, 0)
         self.bullet_speed = 5
