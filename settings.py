@@ -20,15 +20,15 @@ class Settings:
         # self.fleet_direction = 1 - движение пришельцев вправо по оси y, -1 - движение пришельцев влево
         self.fleet_direction = 1
 
-        self.bullet_width = 2
+        self.bullet_width = 4
         self.bullet_height = 20
         self.bullet_color = (255, 0, 0)
-        self.bullet_speed = 3
+        self.bullet_speed = 5
         self.bullets_limit = 4
 
         self.drop_color = (255, 0, 0)
         self.drop_width = 5
-        self.drop_height = randint(10, 80)
-        self.drop_speed = 3
+        self.drop_height = 0
+        self.drop_speed = 10
         self.drop_wind = 0
 

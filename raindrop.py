@@ -26,3 +26,9 @@ class RainDrop(Sprite):
         self.x += self.settings.drop_wind
         self.rect.y = self.y
         self.rect.x = self.x
+
+    # def draw_drop(self, ai_game):
+    #     """Отображение капли на экране"""
+
+    #     self.screen = ai_game
+    #     pygame.draw.rect(self.screen, self.color, self.rect)

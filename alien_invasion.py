@@ -92,6 +92,10 @@ class AlienInvasion:
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
 
+        #     проверка попаданий в пришельцев
+        #  при обнаружении попадания удалить снаряд и пришельца
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+
     def _update_rain_drops(self):
         """Обновляет позицию всех дождевых потоков"""
 
@@ -192,8 +196,7 @@ class AlienInvasion:
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
-        for drop in self.drops.sprites():
-            self.drops.draw(self.screen)
+        self.drops.draw(self.screen)
 
         pygame.display.flip()
 
