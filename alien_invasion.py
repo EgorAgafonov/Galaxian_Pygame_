@@ -11,6 +11,7 @@ from random import randint
 class AlienInvasion:
     def __init__(self):
         """Инициализируем игру и создаем игровые ресурсы."""
+
         pygame.init()
         pygame.display.set_caption("Alien Invasion")
         self.settings = Settings()
@@ -25,6 +26,8 @@ class AlienInvasion:
         self._create_aliens_fleet()
         self._create_rain_drops()
 
+        # RUN GAME BLOCK:
+
     def run_game(self):
         """Запуск основного цикла игры"""
 
@@ -35,6 +38,8 @@ class AlienInvasion:
             self._update_aliens()
             self._update_rain_drops()
             self._update_screen()
+
+                                                    # KEY EVENTS BLOCK:
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши"""
@@ -75,12 +80,7 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             sys.exit()
 
-    def _fire_bullet(self):
-        """Создание нового снаряда и включение его в группу bullets."""
-
-        if len(self.bullets) < self.settings.bullets_limit:
-            new_bullet = Bullet(self)
-            self.bullets.add(new_bullet)
+            # UPDATES BLOCK:
 
     def _update_bullets(self):
         """Обновление позиции снарядов, удаление старых снарядов за пределами видимой области экрана, а также
@@ -92,13 +92,7 @@ class AlienInvasion:
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
                 self.bullets.remove(bullet)
-
-        #  проверка попаданий в пришельцев
-        #  при обнаружении попадания удалить снаряд и пришельца
-        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, False, True)
-        if not self.aliens:
-            self.bullets.empty()
-            self._create_aliens_fleet()
+        self._check_bullet_alien_collision()
 
     def _update_rain_drops(self):
         """Обновляет позицию всех дождевых потоков"""
@@ -115,6 +109,28 @@ class AlienInvasion:
 
         self._check_fleet_edges()
         self.aliens.update()
+        if pygame.sprite.spritecollideany(self.ship, self.aliens):
+            print('Ship hit!!!')
+
+                                                  # GAME METHODS BLOCK:
+
+    def _fire_bullet(self):
+        """Создание нового снаряда и включение его в группу bullets."""
+
+        if len(self.bullets) < self.settings.bullets_limit:
+            new_bullet = Bullet(self)
+            self.bullets.add(new_bullet)
+
+    def _check_bullet_alien_collision(self):
+        """Обработка коллизий спрайтов между снарядами и кораблями пришельцев. При пересечении пуля и корабль
+        пришельца удаляются (корабль пришельца сбит). """
+
+        #  проверка попаданий в пришельцев
+        #  при обнаружении попадания удалить снаряд и пришельца
+        collisions = pygame.sprite.groupcollide(self.bullets, self.aliens, True, True)
+        if not self.aliens:
+            self.bullets.empty()
+            self._create_aliens_fleet()
 
     def _create_alien(self, alien_number, row_number):
         """Создание пришельца и размещение в ряду"""

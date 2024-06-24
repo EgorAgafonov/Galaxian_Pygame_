@@ -13,11 +13,11 @@ class Settings:
         self.screen_height = self.background_image.get_height()
 
         self.meteor_speed = 3
-        self.ship_speed = 1.5
-        self.alien_speed = 1
+        self.ship_speed = 2
+        self.alien_speed = 1.5
 
         self.fleet_drop_speed = 20
-        # self.fleet_direction = 1 - движение пришельцев вправо по оси y, -1 - движение пришельцев влево
+        # self.fleet_direction = 1 - движение пришельцев вправо по оси x, -1 - движение пришельцев влево
         self.fleet_direction = 1
 
         self.bullet_width = 400
