@@ -6,6 +6,8 @@ from bullet import Bullet
 from allien import Alien
 from raindrop import RainDrop
 from random import randint
+from time import sleep
+from game_stats import GameStats
 
 
 class AlienInvasion:
@@ -18,6 +20,7 @@ class AlienInvasion:
         self.screen = pygame.display.set_mode((0, 0))
         self.settings.screen_width = self.screen.get_rect().width
         self.settings.screen_height = self.screen.get_rect().height
+        self.stats = GameStats(self)
         self.ship = Ship(screen=self.screen, ai_settings=self.settings)
         self.bullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
