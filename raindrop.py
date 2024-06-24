@@ -17,10 +17,12 @@ class RainDrop(Sprite):
         self.rect.y = 0
 
         self.y = float(self.rect.y)
+        self.x = float(self.rect.y)
 
     def update(self):
         """Перемещение дождевого потока вниз экрана"""
 
         self.y += self.settings.drop_speed
+        self.x += self.settings.drop_wind
         self.rect.y = self.y
-
+        self.rect.x = self.x

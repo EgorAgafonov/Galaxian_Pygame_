@@ -1,6 +1,6 @@
-import pygame
-
 """Класс с настройками игры Alien_Invasion"""
+import pygame
+from random import randint
 
 
 class Settings:
@@ -28,6 +28,7 @@ class Settings:
 
         self.drop_color = (255, 0, 0)
         self.drop_width = 5
-        self.drop_height = 60
-        self.drop_speed = 10
+        self.drop_height = randint(10, 80)
+        self.drop_speed = 3
+        self.drop_wind = 0
 
