@@ -34,6 +34,13 @@ class Ship:
         self.rect.x = self.x
         self.rect.y = self.y
 
+    def center_ship(self):
+        """Каждый раз после столкновения с пришельцем метод возвращает корабль игрока в центр нижней части экрана"""
+
+        self.rect.midbottom = self.screen_rect.midbottom
+        self.x = float(self.rect.x)
+
+
     def blitme(self):
         """Displays the ship at its current position."""
 

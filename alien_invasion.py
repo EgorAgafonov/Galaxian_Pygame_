@@ -31,7 +31,7 @@ class AlienInvasion:
         self._create_aliens_fleet()
         self._create_rain_drops()
 
-                                                    # RUN GAME BLOCK:
+        # RUN GAME BLOCK:
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -44,7 +44,7 @@ class AlienInvasion:
             self._update_rain_drops()
             self._update_screen()
 
-                                                    # KEY EVENTS BLOCK:
+            # KEY EVENTS BLOCK:
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши"""
@@ -56,6 +56,8 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
+        if not self.stats.game_active:
+            sys.exit()
 
     def _check_keydown_events(self, event):
         """Реагирует на событие нажатия клавиши вниз (KEYDOWN)"""
@@ -85,7 +87,8 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             sys.exit()
 
-                                                     # UPDATES BLOCK:
+
+                                                            # UPDATES BLOCK:
 
     def _update_bullets(self):
         """Обновление позиции снарядов, удаление старых снарядов за пределами видимой области экрана, а также
@@ -116,23 +119,26 @@ class AlienInvasion:
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
             self._ship_hit()
+        self._check_aliens_bottom()
 
-                                                  # GAME METHODS BLOCK:
+            # GAME METHODS BLOCK:
+
     def _ship_hit(self):
         """Обрабатывает столкновения корабля с пришельцем """
 
-    # уменьшение количества жизней (попыток) игрока в случае столкновении корабля с пришельцем
-        self.stats.ships_left -= 1
-    # очистка пришельцев и снарядов
-        self.aliens.empty()
-        self.bullets.empty()
-    # создание нового флота пришельцев и размещение корабля в центре
-        self._create_aliens_fleet()
-        self.ship.center_ship()
-
-        time.sleep(0.5)
-
-
+        if self.stats.ships_left > 0:
+            # уменьшение количества жизней (попыток) игрока в случае столкновении корабля с пришельцем
+            self.stats.ships_left -= 1
+            # очистка пришельцев и снарядов
+            self.aliens.empty()
+            self.bullets.empty()
+            # создание нового флота пришельцев и размещение корабля в центре
+            self._create_aliens_fleet()
+            self.ship.center_ship()
+            time.sleep(1)
+        else:
+            self.stats.game_active = False
+            print(f'\n{self.stats.game_active}')
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
@@ -181,6 +187,16 @@ class AlienInvasion:
         for row_number in range(number_rows):
             for alien_number in range(number_alien_x):
                 self._create_alien(alien_number, row_number)
+
+    def _check_aliens_bottom(self):
+        """Метод проверки пересечения флотом пришельцев нижней части игрового экрана и обработка указанного события"""
+
+        screen_rect = self.screen.get_rect()
+        for alien in self.aliens.sprites():
+            if alien.rect.bottom >= screen_rect.bottom:
+                # вызываются те же события, которые происходят при столкновении корабля с пришельцем
+                self._ship_hit()
+                break
 
     def _check_fleet_edges(self):
         """Реагирует на достижение пришельцем края экрана"""
