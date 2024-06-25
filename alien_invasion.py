@@ -31,7 +31,9 @@ class AlienInvasion:
         self._create_aliens_fleet()
         self._create_rain_drops()
 
-        # RUN GAME BLOCK:
+
+                                                             # RUN GAME BLOCK:
+
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -121,7 +123,8 @@ class AlienInvasion:
             self._ship_hit()
         self._check_aliens_bottom()
 
-            # GAME METHODS BLOCK:
+
+                                                         # GAME METHODS BLOCK:
 
     def _ship_hit(self):
         """Обрабатывает столкновения корабля с пришельцем """
@@ -138,7 +141,6 @@ class AlienInvasion:
             time.sleep(1)
         else:
             self.stats.game_active = False
-            print(f'\n{self.stats.game_active}')
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
