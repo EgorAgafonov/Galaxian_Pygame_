@@ -46,7 +46,7 @@ class AlienInvasion:
             self._update_rain_drops()
             self._update_screen()
 
-            # KEY EVENTS BLOCK:
+                                                            # KEYS EVENTS BLOCK:
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши"""
