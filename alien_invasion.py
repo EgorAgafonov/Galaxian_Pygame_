@@ -1,4 +1,6 @@
 import sys
+import time
+
 import pygame
 from settings import Settings
 from ship import Ship
@@ -29,7 +31,7 @@ class AlienInvasion:
         self._create_aliens_fleet()
         self._create_rain_drops()
 
-        # RUN GAME BLOCK:
+                                                    # RUN GAME BLOCK:
 
     def run_game(self):
         """Запуск основного цикла игры"""
@@ -83,7 +85,7 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             sys.exit()
 
-            # UPDATES BLOCK:
+                                                     # UPDATES BLOCK:
 
     def _update_bullets(self):
         """Обновление позиции снарядов, удаление старых снарядов за пределами видимой области экрана, а также
@@ -113,9 +115,24 @@ class AlienInvasion:
         self._check_fleet_edges()
         self.aliens.update()
         if pygame.sprite.spritecollideany(self.ship, self.aliens):
-            print('Ship hit!!!')
+            self._ship_hit()
 
                                                   # GAME METHODS BLOCK:
+    def _ship_hit(self):
+        """Обрабатывает столкновения корабля с пришельцем """
+
+    # уменьшение количества жизней (попыток) игрока в случае столкновении корабля с пришельцем
+        self.stats.ships_left -= 1
+    # очистка пришельцев и снарядов
+        self.aliens.empty()
+        self.bullets.empty()
+    # создание нового флота пришельцев и размещение корабля в центре
+        self._create_aliens_fleet()
+        self.ship.center_ship()
+
+        time.sleep(0.5)
+
+
 
     def _fire_bullet(self):
         """Создание нового снаряда и включение его в группу bullets."""
