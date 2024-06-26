@@ -31,22 +31,23 @@ class AlienInvasion:
         self._create_aliens_fleet()
         self._create_rain_drops()
 
-
-                                                             # RUN GAME BLOCK:
-
+        # RUN GAME BLOCK:
 
     def run_game(self):
         """Запуск основного цикла игры"""
 
         while True:
             self._check_events()
-            self.ship.update()
-            self._update_bullets()
-            self._update_aliens()
-            self._update_rain_drops()
+            if self.stats.game_active:
+                self.ship.update()
+                self._update_bullets()
+                self._update_aliens()
+                self._update_rain_drops()
+            else:
+                sys.exit()
             self._update_screen()
 
-                                                            # KEYS EVENTS BLOCK:
+            # KEYS EVENTS BLOCK:
 
     def _check_events(self):
         """Обрабатывает нажатия клавиш и события мыши"""
@@ -58,8 +59,6 @@ class AlienInvasion:
                 self._check_keydown_events(event)
             elif event.type == pygame.KEYUP:
                 self._check_keyup_events(event)
-        if not self.stats.game_active:
-            sys.exit()
 
     def _check_keydown_events(self, event):
         """Реагирует на событие нажатия клавиши вниз (KEYDOWN)"""
@@ -89,8 +88,7 @@ class AlienInvasion:
         elif event.key == pygame.K_q:
             sys.exit()
 
-
-                                                            # UPDATES BLOCK:
+            # UPDATES BLOCK:
 
     def _update_bullets(self):
         """Обновление позиции снарядов, удаление старых снарядов за пределами видимой области экрана, а также
@@ -123,8 +121,7 @@ class AlienInvasion:
             self._ship_hit()
         self._check_aliens_bottom()
 
-
-                                                         # GAME METHODS BLOCK:
+        # GAME METHODS BLOCK:
 
     def _ship_hit(self):
         """Обрабатывает столкновения корабля с пришельцем """
