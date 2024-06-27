@@ -40,7 +40,6 @@ class Ship:
         self.rect.midbottom = self.screen_rect.midbottom
         self.x = float(self.rect.x)
 
-
     def blitme(self):
         """Displays the ship at its current position."""
 
