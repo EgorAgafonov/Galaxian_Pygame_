@@ -43,8 +43,7 @@ class AlienInvasion:
                 self._update_bullets()
                 self._update_aliens()
                 self._update_rain_drops()
-            else:
-                sys.exit()
+
             self._update_screen()
 
             # KEYS EVENTS BLOCK:
