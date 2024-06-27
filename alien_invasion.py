@@ -10,6 +10,7 @@ from raindrop import RainDrop
 from random import randint
 from time import sleep
 from game_stats import GameStats
+from button import Button
 
 
 class AlienInvasion:
@@ -30,6 +31,7 @@ class AlienInvasion:
 
         self._create_aliens_fleet()
         self._create_rain_drops()
+        self.play_button = Button(self, 'Play')
 
         # RUN GAME BLOCK:
 
@@ -251,6 +253,8 @@ class AlienInvasion:
             bullet.draw_bullet()
         self.aliens.draw(self.screen)
         self.drops.draw(self.screen)
+        if not self.stats.game_active:
+            self.play_button.draw_button()
 
         pygame.display.flip()
 
