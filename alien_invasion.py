@@ -17,6 +17,7 @@ class AlienInvasion:
 
         pygame.init()
         pygame.display.set_caption("Alien Invasion")
+        self.clock = pygame.time.Clock()
         self.settings = Settings()
         self.screen = pygame.display.set_mode((0, 0))
         self.settings.screen_width = self.screen.get_rect().width
@@ -45,6 +46,7 @@ class AlienInvasion:
                 self._update_rain_drops()
 
             self._update_screen()
+            self.clock.tick(60)
 
             # KEYS EVENTS BLOCK:
 

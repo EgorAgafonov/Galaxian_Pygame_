@@ -15,25 +15,25 @@ class Settings:
 
         # SHIP
         self.ship_limit = 3
-        self.ship_speed = 2
+        self.ship_speed = 6
 
         # ALIENS
         self.fleet_drop_speed = 20
         # self.fleet_direction = 1 - движение пришельцев вправо по оси x, -1 - движение пришельцев влево
         self.fleet_direction = 1
-        self.alien_speed = 1.5
+        self.alien_speed = 4
 
         # BULLET
         self.bullet_width = 3
         self.bullet_height = 20
         self.bullet_color = (255, 0, 0)
         self.bullets_limit = 4
-        self.bullet_speed = 5
+        self.bullet_speed = 18
 
         # RAIN DROP
         self.drop_color = (255, 0, 0)
         self.drop_width = 5
         self.drop_height = 0
         self.drop_wind = 0
-        self.drop_speed = 10
+        self.drop_speed = 20
 
